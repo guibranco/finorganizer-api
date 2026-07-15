@@ -1,0 +1,2448 @@
+openapi: 3.0.4
+info:
+  title: FinOrganizer API
+  description: 'Personal finance tracking, portfolio, and planning API.'
+  version: v1
+paths:
+  /api/v1/accounts:
+    get:
+      tags:
+        - Accounts
+      parameters:
+        - name: includeArchived
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDto'
+    post:
+      tags:
+        - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/accounts/{id}':
+    get:
+      tags:
+        - Accounts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Accounts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Accounts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/assets:
+    get:
+      tags:
+        - Assets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetDto'
+    post:
+      tags:
+        - Assets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAssetRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/assets/{id}':
+    get:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAssetRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/assets/positions:
+    get:
+      tags:
+        - Assets
+      parameters:
+        - name: asOf
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetPositionDto'
+  '/api/v1/assets/{id}/position':
+    get:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: asOf
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetPositionDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/v1/assets/{id}/prices':
+    get:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetPriceSnapshotDto'
+  /api/v1/assets/prices:
+    post:
+      tags:
+        - Assets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAssetPriceSnapshotRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetPriceSnapshotDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  /api/v1/asset-events:
+    get:
+      tags:
+        - Assets
+      parameters:
+        - name: assetId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetEventDto'
+    post:
+      tags:
+        - Assets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAssetEventRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetEventDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/asset-events/{id}':
+    put:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAssetEventRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetEventDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/budgets:
+    get:
+      tags:
+        - Budgets
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetDto'
+    post:
+      tags:
+        - Budgets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBudgetRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/budgets/{id}':
+    get:
+      tags:
+        - Budgets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Budgets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBudgetRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Budgets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/budgets/vs-actual:
+    get:
+      tags:
+        - Budgets
+      parameters:
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetVsActualDto'
+  /api/v1/categories:
+    get:
+      tags:
+        - Categories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDto'
+    post:
+      tags:
+        - Categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/categories/{id}':
+    get:
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/dashboard/net-worth:
+    get:
+      tags:
+        - Dashboard
+      parameters:
+        - name: months
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NetWorthPointDto'
+  /api/v1/dashboard/allocation:
+    get:
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationDto'
+  /api/v1/dashboard/income-vs-expense:
+    get:
+      tags:
+        - Dashboard
+      parameters:
+        - name: months
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncomeVsExpenseMonthDto'
+  /api/v1/dashboard/passive-income:
+    get:
+      tags:
+        - Dashboard
+      parameters:
+        - name: months
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassiveIncomeSummaryDto'
+  /api/v1/dashboard/top-expense-categories:
+    get:
+      tags:
+        - Dashboard
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: top
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TopExpenseCategoryDto'
+  /api/v1/dashboard/projection:
+    get:
+      tags:
+        - Dashboard
+      parameters:
+        - name: monthsAhead
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectionMonthDto'
+  /api/v1/savings-goals:
+    get:
+      tags:
+        - Goals
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SavingsGoalDto'
+    post:
+      tags:
+        - Goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSavingsGoalRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavingsGoalDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/savings-goals/{id}':
+    get:
+      tags:
+        - Goals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavingsGoalDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Goals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSavingsGoalRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavingsGoalDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Goals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/v1/savings-goals/{id}/contributions':
+    get:
+      tags:
+        - Goals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SavingsGoalContributionDto'
+    post:
+      tags:
+        - Goals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddSavingsGoalContributionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavingsGoalContributionDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/recurrence-rules:
+    get:
+      tags:
+        - Recurrence
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecurrenceRuleDto'
+    post:
+      tags:
+        - Recurrence
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecurrenceRuleRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurrenceRuleDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/recurrence-rules/{id}':
+    get:
+      tags:
+        - Recurrence
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurrenceRuleDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Recurrence
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecurrenceRuleRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurrenceRuleDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Recurrence
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/recurrence-rules/pending-occurrences:
+    get:
+      tags:
+        - Recurrence
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecurrenceOccurrenceDto'
+  '/api/v1/recurrence-rules/occurrences/{occurrenceId}/confirm':
+    post:
+      tags:
+        - Recurrence
+      parameters:
+        - name: occurrenceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurrenceOccurrenceDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/v1/recurrence-rules/occurrences/{occurrenceId}/skip':
+    post:
+      tags:
+        - Recurrence
+      parameters:
+        - name: occurrenceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurrenceOccurrenceDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/transactions:
+    get:
+      tags:
+        - Transactions
+      parameters:
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: categoryId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionType'
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDtoPagedResult'
+    post:
+      tags:
+        - Transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+  '/api/v1/transactions/{id}':
+    get:
+      tags:
+        - Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTransactionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/transactions/import:
+    post:
+      tags:
+        - Transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportTransactionsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionImportSummary'
+components:
+  schemas:
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/AccountType'
+        currency:
+          type: string
+          nullable: true
+        initialBalance:
+          type: number
+          format: double
+        currentBalance:
+          type: number
+          format: double
+        isArchived:
+          type: boolean
+        createdAtUtc:
+          type: string
+          format: date-time
+      additionalProperties: false
+    AccountType:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+      type: integer
+      format: int32
+    AddSavingsGoalContributionRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        note:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AllocationByAccountDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+          nullable: true
+        balance:
+          type: number
+          format: double
+        percent:
+          type: number
+          format: double
+      additionalProperties: false
+    AllocationByAssetClassDto:
+      type: object
+      properties:
+        class:
+          $ref: '#/components/schemas/AssetClass'
+        marketValue:
+          type: number
+          format: double
+        percent:
+          type: number
+          format: double
+      additionalProperties: false
+    AllocationDto:
+      type: object
+      properties:
+        byAssetClass:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationByAssetClassDto'
+          nullable: true
+        byAccount:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationByAccountDto'
+          nullable: true
+      additionalProperties: false
+    AssetClass:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      type: integer
+      format: int32
+    AssetDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticker:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        class:
+          $ref: '#/components/schemas/AssetClass'
+        currency:
+          type: string
+          nullable: true
+        exchange:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AssetEventDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/AssetEventType'
+        quantity:
+          type: number
+          format: double
+        unitPrice:
+          type: number
+          format: double
+        fees:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        notes:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AssetEventType:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+      type: integer
+      format: int32
+    AssetPositionDto:
+      type: object
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        ticker:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        class:
+          $ref: '#/components/schemas/AssetClass'
+        currency:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+          format: double
+        averageCost:
+          type: number
+          format: double
+        totalInvested:
+          type: number
+          format: double
+        realizedPnL:
+          type: number
+          format: double
+        incomeReceived:
+          type: number
+          format: double
+        marketPrice:
+          type: number
+          format: double
+          nullable: true
+        marketValue:
+          type: number
+          format: double
+          nullable: true
+        unrealizedPnL:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    AssetPriceSnapshotDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+          format: double
+      additionalProperties: false
+    BudgetDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        month:
+          type: string
+          format: date
+        limitAmount:
+          type: number
+          format: double
+      additionalProperties: false
+    BudgetVsActualDto:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        categoryName:
+          type: string
+          nullable: true
+        month:
+          type: string
+          format: date
+        limitAmount:
+          type: number
+          format: double
+        actualAmount:
+          type: number
+          format: double
+        remaining:
+          type: number
+          format: double
+        percentUsed:
+          type: number
+          format: double
+      additionalProperties: false
+    CategoryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/CategoryKind'
+        parentCategoryId:
+          type: string
+          format: uuid
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        isPassive:
+          type: boolean
+      additionalProperties: false
+    CategoryKind:
+      enum:
+        - 0
+        - 1
+      type: integer
+      format: int32
+    CreateAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/AccountType'
+        currency:
+          type: string
+          nullable: true
+        initialBalance:
+          type: number
+          format: double
+      additionalProperties: false
+    CreateAssetEventRequest:
+      type: object
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/AssetEventType'
+        quantity:
+          type: number
+          format: double
+        unitPrice:
+          type: number
+          format: double
+        fees:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        notes:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreateAssetRequest:
+      type: object
+      properties:
+        ticker:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        class:
+          $ref: '#/components/schemas/AssetClass'
+        currency:
+          type: string
+          nullable: true
+        exchange:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreateBudgetRequest:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        month:
+          type: string
+          format: date
+        limitAmount:
+          type: number
+          format: double
+      additionalProperties: false
+    CreateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/CategoryKind'
+        parentCategoryId:
+          type: string
+          format: uuid
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        isPassive:
+          type: boolean
+      additionalProperties: false
+    CreateRecurrenceRuleRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        accountId:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        frequency:
+          $ref: '#/components/schemas/RecurrenceFrequency'
+        dayOfMonth:
+          type: integer
+          format: int32
+          nullable: true
+        dayOfWeek:
+          $ref: '#/components/schemas/DayOfWeek'
+        interval:
+          type: integer
+          format: int32
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+          nullable: true
+        autoPost:
+          type: boolean
+      additionalProperties: false
+    CreateSavingsGoalRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        targetAmount:
+          type: number
+          format: double
+        targetDate:
+          type: string
+          format: date
+        linkedAccountId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    CreateTransactionRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    CsvColumnMapping:
+      type: object
+      properties:
+        dateColumn:
+          type: integer
+          format: int32
+        amountColumn:
+          type: integer
+          format: int32
+        descriptionColumn:
+          type: integer
+          format: int32
+          nullable: true
+        typeColumn:
+          type: integer
+          format: int32
+          nullable: true
+        categoryColumn:
+          type: integer
+          format: int32
+          nullable: true
+        tagsColumn:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    CsvImportRowResult:
+      type: object
+      properties:
+        rowNumber:
+          type: integer
+          format: int32
+        transaction:
+          $ref: '#/components/schemas/ParsedTransaction'
+        error:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DayOfWeek:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      type: integer
+      format: int32
+    HttpValidationProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          nullable: true
+      additionalProperties: { }
+    ImportTransactionsRequest:
+      type: object
+      properties:
+        csvContent:
+          type: string
+          nullable: true
+        accountId:
+          type: string
+          format: uuid
+        mapping:
+          $ref: '#/components/schemas/CsvColumnMapping'
+        hasHeaderRow:
+          type: boolean
+        delimiter:
+          type: string
+        dateFormat:
+          type: string
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        tagsSeparator:
+          type: string
+      additionalProperties: false
+    IncomeVsExpenseMonthDto:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        income:
+          type: number
+          format: double
+        expense:
+          type: number
+          format: double
+        net:
+          type: number
+          format: double
+      additionalProperties: false
+    NetWorthPointDto:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        accountsBalance:
+          type: number
+          format: double
+        portfolioValue:
+          type: number
+          format: double
+        netWorth:
+          type: number
+          format: double
+      additionalProperties: false
+    ParsedTransaction:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        categoryName:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    PassiveIncomeMonthDto:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        amount:
+          type: number
+          format: double
+      additionalProperties: false
+    PassiveIncomeSummaryDto:
+      type: object
+      properties:
+        months:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassiveIncomeMonthDto'
+          nullable: true
+        trailingTwelveMonthTotal:
+          type: number
+          format: double
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: { }
+    ProjectionAccountBalanceDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+          nullable: true
+        projectedBalance:
+          type: number
+          format: double
+      additionalProperties: false
+    ProjectionMonthDto:
+      type: object
+      properties:
+        month:
+          type: string
+          format: date
+        recurringIncome:
+          type: number
+          format: double
+        recurringExpense:
+          type: number
+          format: double
+        net:
+          type: number
+          format: double
+        cumulativeNetWorth:
+          type: number
+          format: double
+        accountBalances:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectionAccountBalanceDto'
+          nullable: true
+      additionalProperties: false
+    RecurrenceFrequency:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      type: integer
+      format: int32
+    RecurrenceOccurrenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        recurrenceRuleId:
+          type: string
+          format: uuid
+        recurrenceRuleName:
+          type: string
+          nullable: true
+        dueDate:
+          type: string
+          format: date
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/RecurrenceOccurrenceStatus'
+      additionalProperties: false
+    RecurrenceOccurrenceStatus:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    RecurrenceRuleDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        accountId:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        frequency:
+          $ref: '#/components/schemas/RecurrenceFrequency'
+        dayOfMonth:
+          type: integer
+          format: int32
+          nullable: true
+        dayOfWeek:
+          $ref: '#/components/schemas/DayOfWeek'
+        interval:
+          type: integer
+          format: int32
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+          nullable: true
+        nextDueDate:
+          type: string
+          format: date
+        autoPost:
+          type: boolean
+        isActive:
+          type: boolean
+      additionalProperties: false
+    SavingsGoalContributionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        savingsGoalId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        note:
+          type: string
+          nullable: true
+      additionalProperties: false
+    SavingsGoalDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        targetAmount:
+          type: number
+          format: double
+        targetDate:
+          type: string
+          format: date
+        linkedAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        currentAmount:
+          type: number
+          format: double
+        progressPercent:
+          type: number
+          format: double
+      additionalProperties: false
+    TopExpenseCategoryDto:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        categoryName:
+          type: string
+          nullable: true
+        amount:
+          type: number
+          format: double
+        percent:
+          type: number
+          format: double
+      additionalProperties: false
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        recurrenceId:
+          type: string
+          format: uuid
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    TransactionDtoPagedResult:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDto'
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    TransactionImportSummary:
+      type: object
+      properties:
+        imported:
+          type: integer
+          format: int32
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CsvImportRowResult'
+          nullable: true
+      additionalProperties: false
+    TransactionType:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    UpdateAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/AccountType'
+        currency:
+          type: string
+          nullable: true
+        isArchived:
+          type: boolean
+      additionalProperties: false
+    UpdateAssetEventRequest:
+      type: object
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/AssetEventType'
+        quantity:
+          type: number
+          format: double
+        unitPrice:
+          type: number
+          format: double
+        fees:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        notes:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UpdateAssetRequest:
+      type: object
+      properties:
+        ticker:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        class:
+          $ref: '#/components/schemas/AssetClass'
+        currency:
+          type: string
+          nullable: true
+        exchange:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UpdateBudgetRequest:
+      type: object
+      properties:
+        limitAmount:
+          type: number
+          format: double
+      additionalProperties: false
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/CategoryKind'
+        parentCategoryId:
+          type: string
+          format: uuid
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        isPassive:
+          type: boolean
+      additionalProperties: false
+    UpdateRecurrenceRuleRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        accountId:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        frequency:
+          $ref: '#/components/schemas/RecurrenceFrequency'
+        dayOfMonth:
+          type: integer
+          format: int32
+          nullable: true
+        dayOfWeek:
+          $ref: '#/components/schemas/DayOfWeek'
+        interval:
+          type: integer
+          format: int32
+        endDate:
+          type: string
+          format: date
+          nullable: true
+        autoPost:
+          type: boolean
+        isActive:
+          type: boolean
+      additionalProperties: false
+    UpdateSavingsGoalRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        targetAmount:
+          type: number
+          format: double
+        targetDate:
+          type: string
+          format: date
+        linkedAccountId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    UpdateTransactionRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+          nullable: true
+        counterpartyAccountId:
+          type: string
+          format: uuid
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    UpsertAssetPriceSnapshotRequest:
+      type: object
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+          format: double
+      additionalProperties: false
+tags:
+  - name: Accounts
+  - name: Assets
+  - name: Budgets
+  - name: Categories
+  - name: Dashboard
+  - name: Goals
+  - name: Recurrence
+  - name: Transactions

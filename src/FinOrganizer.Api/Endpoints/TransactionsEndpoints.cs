@@ -1,4 +1,5 @@
 using FinOrganizer.Api.Common;
+using FinOrganizer.Application.Common.Models;
 using FinOrganizer.Application.Transactions;
 using FinOrganizer.Domain.Enums;
 
@@ -20,29 +21,40 @@ public static class TransactionsEndpoints
                     accountId, categoryId, type, dateFrom, dateTo, search,
                     page ?? 1, pageSize ?? 50);
                 return Results.Ok(await service.GetPagedAsync(filter, ct));
-            });
+            })
+            .Produces<PagedResult<TransactionDto>>();
 
         group.MapGet("/{id:guid}", async (Guid id, ITransactionsService service, CancellationToken ct)
-            => Results.Ok(await service.GetByIdAsync(id, ct)));
+                => Results.Ok(await service.GetByIdAsync(id, ct)))
+            .Produces<TransactionDto>()
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         group.MapPost("/", async (CreateTransactionRequest request, ITransactionsService service, CancellationToken ct) =>
             {
                 var transaction = await service.CreateAsync(request, ct);
                 return Results.Created($"/api/v1/transactions/{transaction.Id}", transaction);
             })
-            .WithRequestValidation<CreateTransactionRequest>();
+            .WithRequestValidation<CreateTransactionRequest>()
+            .Produces<TransactionDto>(StatusCodes.Status201Created)
+            .ProducesValidationProblem();
 
         group.MapPut("/{id:guid}", async (Guid id, UpdateTransactionRequest request, ITransactionsService service, CancellationToken ct)
                 => Results.Ok(await service.UpdateAsync(id, request, ct)))
-            .WithRequestValidation<UpdateTransactionRequest>();
+            .WithRequestValidation<UpdateTransactionRequest>()
+            .Produces<TransactionDto>()
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         group.MapDelete("/{id:guid}", async (Guid id, ITransactionsService service, CancellationToken ct) =>
-        {
-            await service.DeleteAsync(id, ct);
-            return Results.NoContent();
-        });
+            {
+                await service.DeleteAsync(id, ct);
+                return Results.NoContent();
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         group.MapPost("/import", async (ImportTransactionsRequest request, ITransactionsService service, CancellationToken ct)
-            => Results.Ok(await service.ImportCsvAsync(request, ct)));
+                => Results.Ok(await service.ImportCsvAsync(request, ct)))
+            .Produces<TransactionImportSummary>();
     }
 }
