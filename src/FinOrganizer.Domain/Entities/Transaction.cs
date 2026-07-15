@@ -26,11 +26,15 @@ public class Transaction : Entity
 
     public List<string> Tags { get; set; } = [];
 
-    /// <summary>Signed amount for balance math: positive for Income, negative for Expense/outgoing Transfer.</summary>
+    /// <summary>
+    /// Signed amount from <paramref name="perspectiveAccountId"/>'s point of view: positive for Income,
+    /// negative for Expense (both only when that account owns the transaction), negative for an outgoing
+    /// Transfer, positive for an incoming Transfer, and zero for any account this transaction doesn't touch.
+    /// </summary>
     public decimal SignedAmount(Guid perspectiveAccountId) => Type switch
     {
-        TransactionType.Income => Amount,
-        TransactionType.Expense => -Amount,
+        TransactionType.Income when perspectiveAccountId == AccountId => Amount,
+        TransactionType.Expense when perspectiveAccountId == AccountId => -Amount,
         TransactionType.Transfer when perspectiveAccountId == AccountId => -Amount,
         TransactionType.Transfer when perspectiveAccountId == CounterpartyAccountId => Amount,
         _ => 0m,
