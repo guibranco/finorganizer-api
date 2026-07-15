@@ -13,12 +13,12 @@ public static class TransactionsEndpoints
         group.MapGet("/", async (
                 Guid? accountId, Guid? categoryId, TransactionType? type,
                 DateOnly? dateFrom, DateOnly? dateTo, string? search,
-                int page, int pageSize,
+                int? page, int? pageSize,
                 ITransactionsService service, CancellationToken ct) =>
             {
                 var filter = new TransactionFilter(
                     accountId, categoryId, type, dateFrom, dateTo, search,
-                    page == 0 ? 1 : page, pageSize == 0 ? 50 : pageSize);
+                    page ?? 1, pageSize ?? 50);
                 return Results.Ok(await service.GetPagedAsync(filter, ct));
             });
 

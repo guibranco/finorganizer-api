@@ -9,8 +9,8 @@ public static class AccountsEndpoints
     {
         var group = app.MapGroup("/api/v1/accounts").WithTags("Accounts");
 
-        group.MapGet("/", async (bool includeArchived, IAccountsService service, CancellationToken ct)
-            => Results.Ok(await service.GetAllAsync(includeArchived, ct)));
+        group.MapGet("/", async (bool? includeArchived, IAccountsService service, CancellationToken ct)
+            => Results.Ok(await service.GetAllAsync(includeArchived ?? false, ct)));
 
         group.MapGet("/{id:guid}", async (Guid id, IAccountsService service, CancellationToken ct)
             => Results.Ok(await service.GetByIdAsync(id, ct)));

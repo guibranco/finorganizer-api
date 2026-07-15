@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FinOrganizer.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,8 +29,7 @@ public sealed class GlobalExceptionHandlingMiddleware(RequestDelegate next, ILog
             };
 
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Response.ContentType = "application/problem+json";
-            await context.Response.WriteAsJsonAsync(problem);
+            await context.Response.WriteAsJsonAsync(problem, options: (JsonSerializerOptions?)null, contentType: "application/problem+json");
         }
         catch (Exception ex)
         {
@@ -42,7 +42,6 @@ public sealed class GlobalExceptionHandlingMiddleware(RequestDelegate next, ILog
     {
         var problem = new ProblemDetails { Status = statusCode, Title = title, Detail = detail };
         context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/problem+json";
-        await context.Response.WriteAsJsonAsync(problem);
+        await context.Response.WriteAsJsonAsync(problem, options: (JsonSerializerOptions?)null, contentType: "application/problem+json");
     }
 }
