@@ -1,0 +1,28 @@
+## .NET
+bin/
+obj/
+out/
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+## SQLite runtime data
+*.db
+*.db-shm
+*.db-wal
+
+## Test results
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+coverage*.info
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Env
+.env

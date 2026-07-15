@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FinOrganizer.Api/FinOrganizer.Api.csproj" />
+    <Project Path="src/FinOrganizer.Application/FinOrganizer.Application.csproj" />
+    <Project Path="src/FinOrganizer.Domain/FinOrganizer.Domain.csproj" />
+    <Project Path="src/FinOrganizer.Infrastructure/FinOrganizer.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FinOrganizer.IntegrationTests/FinOrganizer.IntegrationTests.csproj" />
+    <Project Path="tests/FinOrganizer.UnitTests/FinOrganizer.UnitTests.csproj" />
+  </Folder>
+</Solution>
