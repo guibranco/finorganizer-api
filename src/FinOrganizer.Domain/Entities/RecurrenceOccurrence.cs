@@ -13,6 +13,11 @@ public class RecurrenceOccurrence : Entity
 
     public DateOnly DueDate { get; set; }
 
+    /// <summary>Snapshot of the rule's amount/currency at materialization time, so later rule edits don't retroactively change pending items.</summary>
+    public decimal Amount { get; set; }
+
+    public required string Currency { get; set; }
+
     public RecurrenceOccurrenceStatus Status { get; set; } = RecurrenceOccurrenceStatus.PendingConfirmation;
 
     public Guid? PostedTransactionId { get; set; }
